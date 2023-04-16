@@ -11,7 +11,7 @@ import java.util.List;
 public class IBuilder {
 
     public static ItemStack getBorder(Material material) {
-        ItemStack itemStack = new ItemStack(material);
+        ItemStack itemStack = new ItemStack(material, 1, (short) 7);
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(IString.addColor("&7"));
         itemStack.setItemMeta(itemMeta);
@@ -62,20 +62,6 @@ public class IBuilder {
             lore.add(IString.addColor(s));
         }
         itemMeta.setLore(lore);
-        itemStack.setItemMeta(itemMeta);
-        return itemStack;
-    }
-
-    public static ItemStack buildItem(Material material, String name, Integer i, String... lores) {
-        ItemStack itemStack = new ItemStack(material);
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setDisplayName(IString.addColor(name));
-        List<String> lore = new ArrayList<>();
-        for (String s : lores) {
-            lore.add(IString.addColor(s));
-        }
-        itemMeta.setLore(lore);
-        itemMeta.setCustomModelData(i);
         itemStack.setItemMeta(itemMeta);
         return itemStack;
     }

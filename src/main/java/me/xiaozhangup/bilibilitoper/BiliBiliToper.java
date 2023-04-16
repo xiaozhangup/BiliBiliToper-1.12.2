@@ -4,7 +4,9 @@ import me.xiaozhangup.bilibilitoper.expansion.BiliBiliToperExpansion;
 import me.xiaozhangup.bilibilitoper.utils.command.Command;
 import me.xiaozhangup.bilibilitoper.utils.manager.ConfigManager;
 import me.xiaozhangup.bilibilitoper.utils.manager.ListenerManager;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.inventory.Book;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
@@ -19,7 +21,7 @@ import java.util.List;
 
 public class BiliBiliToper extends JavaPlugin {
 
-    public static Plugin plugin;
+    public static BiliBiliToper plugin;
     public static ListenerManager listenerManager = new ListenerManager();
     public static MiniMessage mm = MiniMessage.miniMessage();
     public static final @NotNull Component reloaded = mm.deserialize("<dark_gray>[<color:#00a1d6>哔哩</color>]</dark_gray> 配置文件已重载");
@@ -31,9 +33,16 @@ public class BiliBiliToper extends JavaPlugin {
     public static String part;
     public static int cooldown;
     public static List<String> alias;
-
     private BiliBiliToperExpansion expansion;
 
+    private BukkitAudiences adventure;
+
+    public BukkitAudiences adventure() {
+        if(this.adventure == null) {
+            throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
+        }
+        return this.adventure;
+    }
 
     public static void loadConfig() {
         FileConfiguration config = BiliBiliToper.plugin.getConfig();
@@ -55,7 +64,7 @@ public class BiliBiliToper extends JavaPlugin {
 
     public static void runReward(Player p) {
         Bukkit.getScheduler().runTask(BiliBiliToper.plugin, () -> {
-            var name = p.getName();
+            String name = p.getName();
             commands.forEach((s -> {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s.replace("%player%", name));
             }));
@@ -69,6 +78,7 @@ public class BiliBiliToper extends JavaPlugin {
         saveDefaultConfig();
         reloadConfig();
         loadConfig();
+        this.adventure = BukkitAudiences.create(this);
 
         ConfigManager.createFile("users");
         ConfigManager.createFile("videos");
@@ -86,7 +96,8 @@ public class BiliBiliToper extends JavaPlugin {
             if (!commandSender.isOp()) return false;
             reloadConfig();
             loadConfig();
-            commandSender.sendMessage(reloaded);
+            Audience audience = plugin.adventure().sender(commandSender);
+            audience.sendMessage(reloaded);
             return true;
         });
 
@@ -97,5 +108,9 @@ public class BiliBiliToper extends JavaPlugin {
     @Override
     public void onDisable() {
         expansion.unregister();
+        if(this.adventure != null) {
+            this.adventure.close();
+            this.adventure = null;
+        }
     }
 }

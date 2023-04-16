@@ -39,11 +39,18 @@ public class BiliBiliToperExpansion extends PlaceholderExpansion {
 
     @Override
     public @Nullable String onPlaceholderRequest(Player player, @NotNull String params) {
-        // FIXME: 这里使用了增强 Switch 表达式，应该是 JDK 13 新出的，如果用户不可以使用，请更改为旧版格式。
-        return switch (params.toLowerCase()) {
-            case "totalvideos" -> String.valueOf(DataMaster.getPostedVideos(player));
-            case "nick" -> DataMaster.getNick(player);
-            default -> "";
+        String request;
+        switch (params.toLowerCase()) {
+            case "totalvideos":
+                request = String.valueOf(DataMaster.getPostedVideos(player));
+                break;
+            case "nick":
+                request = DataMaster.getNick(player);
+                break;
+            default:
+                request = "";
+                break;
         };
+        return request;
     }
 }

@@ -15,7 +15,7 @@ import java.util.UUID;
 
 public class Skull {
     public static ItemStack getSkull(String base64, String name, List<String> stringList) {
-        ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1, (short) 3);
+        ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
         SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
         GameProfile profile = new GameProfile(UUID.randomUUID(), "");
         profile.getProperties().put("textures", new Property("textures",
@@ -36,7 +36,7 @@ public class Skull {
     }
 
     public static ItemStack getSkull(String base64, String name) {
-        ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1, (short) 3);
+        ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
         SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
         GameProfile profile = new GameProfile(UUID.randomUUID(), "");
         profile.getProperties().put("textures", new Property("textures",
@@ -56,7 +56,7 @@ public class Skull {
     }
 
     public static ItemStack getSkull(String base64) {
-        ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1, (short) 3);
+        ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
         SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
         GameProfile profile = new GameProfile(UUID.randomUUID(), "");
         profile.getProperties().put("textures", new Property("textures",
@@ -75,7 +75,7 @@ public class Skull {
     }
 
     public static ItemStack getSkull(Player player, String name, List<String> stringList) {
-        ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1, (short) 3);
+        ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
         SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
 
         skullMeta.setOwningPlayer(player);
@@ -88,7 +88,7 @@ public class Skull {
 
 
     public static ItemStack getSkull(Player player, String name, String... lores) {
-        ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1, (short) 3);
+        ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
         SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
 
         skullMeta.setOwningPlayer(player);
@@ -104,7 +104,7 @@ public class Skull {
     }
 
     public static ItemStack getSkull(Player player, String name) {
-        ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1, (short) 3);
+        ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
         SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
         skullMeta.setOwningPlayer(player);
 
@@ -114,7 +114,7 @@ public class Skull {
     }
 
     public static ItemStack getSkull(Player player) {
-        ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1, (short) 3);
+        ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
         SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
 
         skullMeta.setOwningPlayer(player);
@@ -124,7 +124,7 @@ public class Skull {
     }
 
     public static ItemStack getSkull(String base64, String name, String... lores) {
-        ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1, (short) 3);
+        ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
         SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
         GameProfile profile = new GameProfile(UUID.randomUUID(), "");
         profile.getProperties().put("textures", new Property("textures",

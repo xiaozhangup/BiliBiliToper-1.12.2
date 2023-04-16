@@ -3,6 +3,7 @@ package me.xiaozhangup.bilibilitoper;
 import com.alibaba.fastjson2.JSONObject;
 import me.xiaozhangup.bilibilitoper.bilibiliapi.BGetter;
 import me.xiaozhangup.bilibilitoper.data.DataMaster;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -14,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 
 import static me.xiaozhangup.bilibilitoper.BiliBiliToper.mm;
+import static me.xiaozhangup.bilibilitoper.BiliBiliToper.plugin;
 
 public class ChatInput implements Listener {
 
@@ -28,52 +30,58 @@ public class ChatInput implements Listener {
 
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent e) {
-        var p = e.getPlayer();
-        var message = e.getMessage();
+        Player p = e.getPlayer();
+        String message = e.getMessage();
+        Audience audience = plugin.adventure().player(p);
         if (state.get(p) != null) {
             e.setCancelled(true);
             if (message.equals("cancel")) {
                 state.remove(p);
-                p.sendMessage(cancel);
+                audience.sendMessage(cancel);
                 return;
             }
             switch (state.get(p)) {
-                case 1 -> {
+                case 1 : {
                     state.remove(p);
                     DataMaster.setPlayerAccount(p, message);
-                    p.sendMessage(mm.deserialize("<dark_gray>[<color:#00a1d6>哔哩</color>]</dark_gray> 已成功绑定账号 " + message));
+                    audience.sendMessage(mm.deserialize("<dark_gray>[<color:#00a1d6>哔哩</color>]</dark_gray> 已成功绑定账号 " + message));
                     cool.put(p, System.currentTimeMillis());
+                    break;
                 }
-                case 2 -> {
+                case 2 : {
                     //debug
                     //debug
                     state.remove(p);
                     if (DataMaster.getPostedVideos(p).contains(message)) {
-                        p.sendMessage(posted);
+                        audience.sendMessage(posted);
                         return;
                     }
                     JSONObject jsonObject = BGetter.getBaseJson(message);
                     if (jsonObject == null) {
-                        p.sendMessage(cantread);
+                        audience.sendMessage(cantread);
                         return;
                     }
                     if (!BGetter.getPoster(jsonObject).equals(DataMaster.getNick(p))) {
-                        p.sendMessage(accnomatch);
+                        audience.sendMessage(accnomatch);
                         return;
                     }
                     JSONObject video = BGetter.getVideo(jsonObject);
                     if (!check(video)) { //皮飞
-                        p.sendMessage(nomatch);
+                        audience.sendMessage(nomatch);
                         return;
                     }
                     DataMaster.addPostedVideo(p, message);
-                    p.sendMessage(donepost);
+                    audience.sendMessage(donepost);
                     //todo 奖赏代码/和全服广播
                     BiliBiliToper.runReward(p);
-                    Bukkit.broadcast(mm.deserialize(""));
-                    Bukkit.broadcast(mm.deserialize("<dark_gray>[<color:#00a1d6>哔哩</color>]</dark_gray> 玩家<yellow>" + p.getName() + "</yellow>成功投稿了一次视频!"));
-                    Bukkit.broadcast(mm.deserialize("<dark_gray>[<color:#00a1d6>哔哩</color>]</dark_gray> 你可以<yellow><click:open_url:'" + "https://www.bilibili.com/video/" + message + "'>点击此处</click></yellow>前往BiliBili观看他的作品!"));
-                    Bukkit.broadcast(mm.deserialize(""));
+                    Bukkit.getOnlinePlayers().forEach(player -> {
+                        Audience au = plugin.adventure().player(p);
+                        au.sendMessage(mm.deserialize(""));
+                        au.sendMessage(mm.deserialize("<dark_gray>[<color:#00a1d6>哔哩</color>]</dark_gray> 玩家<yellow>" + p.getName() + "</yellow>成功投稿了一次视频!"));
+                        au.sendMessage(mm.deserialize("<dark_gray>[<color:#00a1d6>哔哩</color>]</dark_gray> 你可以<yellow><click:open_url:'" + "https://www.bilibili.com/video/" + message + "'>点击此处</click></yellow>前往BiliBili观看他的作品!"));
+                        au.sendMessage(mm.deserialize(""));
+                    });
+                    break;
                 }
             }
         }
